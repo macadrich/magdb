@@ -154,6 +154,21 @@ func (db *DB) queryByEmail(search string, attribute []string, obj interface{}) e
 	return nil
 }
 
+// ID convert normal string to DBSearchByID
+func (db *DB) ID(id string) DBSearchByID {
+	return DBSearchByID(id)
+}
+
+// Email convert normal string to DBSearchByEmail
+func (db *DB) Email(email string) DBSearchByEmail {
+	return DBSearchByEmail(email)
+}
+
+// Fields set series of attributes
+func (db *DB) Fields(fields ...string) []string {
+	return fields
+}
+
 // Get user search by (ID | email)
 // @param key search key type (DBSearchByEmail | DBSearchByID)
 // @param indexName - dynamodb GSI
