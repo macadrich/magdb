@@ -1,12 +1,10 @@
 package magdb
 
-import (
-	"github.com/macadrich/go-mcdb/mcdb"
-)
+import "github.com/macadrich/go-mcdb/dynamo"
 
 // DataStore inheret to dynamodb
 type DataStore interface {
-	mcdb.Datastore
+	dynamo.Datastore
 }
 
 // MagDB instance
@@ -25,10 +23,10 @@ func NewMagDB(region string, tableName string) *MagDB {
 
 // InitDynamoDBConnection initialize dynamodb connection
 // with region and table name
-func (mag *MagDB) InitDynamoDBConnection() (*mcdb.DB, error) {
-	conn, err := mcdb.CreateConnection(mag.Region)
+func (mag *MagDB) InitDynamoDBConnection() (*dynamo.DB, error) {
+	conn, err := dynamo.CreateConnection(mag.Region)
 	if err != nil {
 		return nil, err
 	}
-	return mcdb.NewDynamoDB(conn, mag.TableName), nil
+	return dynamo.NewDynamoDB(conn, mag.TableName), nil
 }
