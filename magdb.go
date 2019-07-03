@@ -1,12 +1,12 @@
 package magdb
 
 import (
-	"magdb/dynamodb"
+	"github.com/macadrich/magdb"
 )
 
 // DataStore inheret to dynamodb
 type DataStore interface {
-	dynamodb.Datastore
+	magdb.dynamodb.Datastore
 }
 
 // MagDB instance
