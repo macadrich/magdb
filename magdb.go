@@ -1,16 +1,29 @@
 package magdb
 
-import "github.com/macadrich/go-mcdb/dynamo"
+import (
+	"github.com/macadrich/go-mcdb/dynamo"
+	"github.com/macadrich/go-mcdb/mongo"
+)
 
-// DataStore inheret to dynamodb
-type DataStore interface {
+// DataStoreDynamo inheret to dynamodb
+type DataStoreDynamo interface {
 	dynamo.Datastore
 }
 
-// MagDB instance
+// DataStoreMongo inheret to mongodb
+type DataStoreMongo interface {
+	mongo.Datastore
+}
+
+// MagDB contains credential need to initialize for database
 type MagDB struct {
 	Region    string `json:"region"`
 	TableName string `json:"tablename"`
+	Host      string `json:"host"`
+	Username  string `json:"username"`
+	Password  string `json:"password"`
+	Database  string `json:"database"`
+	Source    string `json:"source"`
 }
 
 // NewMagDB initialize new MagDB
@@ -18,6 +31,17 @@ func NewMagDB(region string, tableName string) *MagDB {
 	return &MagDB{
 		Region:    region,
 		TableName: tableName,
+	}
+}
+
+// NewMagDBMongo initialize mongo database with credentials
+func NewMagDBMongo(host, username, password, database, source string) *MagDB {
+	return &MagDB{
+		Host:     host,
+		Username: username,
+		Password: password,
+		Database: database,
+		Source:   source,
 	}
 }
 
@@ -29,4 +53,13 @@ func (mag *MagDB) InitDynamoDBConnection() (*dynamo.DB, error) {
 		return nil, err
 	}
 	return dynamo.NewDynamoDB(conn, mag.TableName), nil
+}
+
+// InitMongoDBConnection -
+func (mag *MagDB) InitMongoDBConnection() (*mongo.DB, error) {
+	conn, err := mongo.NewMongoDB(mag.Host, mag.Username, mag.Password, mag.Database, mag.Source)
+	if err != nil {
+		return nil, err
+	}
+	return conn, nil
 }
